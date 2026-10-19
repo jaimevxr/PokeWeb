@@ -1,5 +1,9 @@
 const grid = document.getElementById('pokedex-grid');
 const cargando = document.getElementById('cargando');
+// Referencias del Modal
+const modal = document.getElementById('pokemon-modal');
+const closeModal = document.getElementById('close-modal');
+const modalBody = document.getElementById('modal-body');
 
 let offset = 0; 
 const limit = 20; 
@@ -71,7 +75,8 @@ const sprite = pokemon.sprites?.other?.showdown?.front_default ||
         <h3>${pokemon.name}</h3>
         <div class="tipos">${tiposHTML}</div>
     `;
-
+// Hacer la tarjeta clicable para abrir el Modal
+    tarjeta.addEventListener('click', () => abrirModal(pokemon, sprite, colorPrincipal));
     grid.appendChild(tarjeta);
 }
 
@@ -84,3 +89,35 @@ const observer = new IntersectionObserver((entradas) => {
 });
 
 observer.observe(cargando);
+
+// Función para montar y mostrar el Modal
+function abrirModal(pokemon, spriteUrl, colorFondo) {
+    // 1. Limpiamos y preparamos el HTML interno
+    modalBody.innerHTML = `
+        <img src="${spriteUrl}" alt="${pokemon.name}">
+        <h2>${pokemon.name}</h2>
+        <div class="tipos" style="margin-bottom: 20px;">
+            ${pokemon.types.map(t => `<span class="type-badge" style="background-color: ${coloresTipos[t.type.name]}">${t.type.name}</span>`).join('')}
+        </div>
+        <p><strong>Altura:</strong> ${pokemon.height / 10} m</p>
+        <p><strong>Peso:</strong> ${pokemon.weight / 10} kg</p>
+    `;
+
+    // 2. Coloreamos el borde superior o el fondo según su tipo
+    document.querySelector('.modal-content').style.borderTop = `10px solid ${colorFondo}`;
+
+    // 3. Le quitamos la clase 'hidden' para que se muestre con la animación
+    modal.classList.remove('hidden');
+}
+
+// Función para cerrar el Modal al pulsar la X
+closeModal.addEventListener('click', () => {
+    modal.classList.add('hidden');
+});
+
+// Función extra: cerrar el Modal si hacemos clic fuera de la caja blanca
+window.addEventListener('click', (evento) => {
+    if (evento.target === modal) {
+        modal.classList.add('hidden');
+    }
+});
