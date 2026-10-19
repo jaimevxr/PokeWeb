@@ -1,0 +1,102 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif; /* Nueva fuente */
+}
+
+body {
+    background-color: #2a2a2a; /* Fondo oscuro elegante */
+    color: #fff;
+}
+
+/* Cabecera estilo Pokédex clásica */
+.pokedex-header {
+    background-color: #e3350d; /* Rojo oficial Pokémon */
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border-bottom: 8px solid #333;
+}
+
+.pokedex-header h1 {
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Tarjetas mejoradas */
+.pokemon-card {
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.pokemon-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+}
+
+.pokemon-card .numero {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.2em;
+    font-weight: 800;
+    opacity: 0.5;
+}
+
+.pokemon-card img {
+    height: 110px;
+    object-fit: contain;
+    margin: 15px 0;
+    /* Sombre para darle volumen al modelo 3D */
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4));
+}
+
+.pokemon-card h3 {
+    text-transform: capitalize;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Estilos para los tipos (Agua, Fuego, etc.) */
+.tipos {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.type-badge {
+    background-color: rgba(255, 255, 255, 0.25);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Texto de carga */
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+}
