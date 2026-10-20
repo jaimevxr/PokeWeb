@@ -63,9 +63,10 @@ body {
 
 .pokemon-card img {
     height: 110px;
-    object-fit: contain;
-    margin: 15px 0;
-    /* Sombre para darle volumen al modelo 3D */
+    width: 110px; /* Forzamos un ancho máximo para hacer una caja perfectamente cuadrada */
+    object-fit: contain; /* Esto evita que se deformen o estiren */
+    margin: 15px auto; /* El 'auto' asegura que estén siempre centrados horizontalmente */
+    display: block; /* Obligatorio para que el centrado con margin funcione */
     filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4));
 }
 
@@ -100,37 +101,41 @@ body {
     padding: 40px;
     color: #aaa;
 }
-/* --- ESTILOS DEL MODAL --- */
+/* --- ESTILOS DEL MODAL (VERSIÓN RECTANGULAR EN INGLÉS) --- */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.75); /* Fondo oscuro semitransparente */
+    background-color: rgba(0, 0, 0, 0.8); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Para que quede por encima de todo */
+    z-index: 1000;
     opacity: 1;
-    transition: opacity 0.3s ease; /* Animación de fundido */
+    transition: opacity 0.3s ease;
 }
 
-/* Esta clase la pondremos y quitaremos con JavaScript */
 .modal.hidden {
     opacity: 0;
-    pointer-events: none; /* Evita que se pueda hacer clic si está invisible */
+    pointer-events: none;
 }
 
 .modal-content {
     background: #fff;
     color: #333;
-    width: 90%;
-    max-width: 450px;
+    width: 95%;
+    max-width: 900px; /* ¡Ahora es mucho más ancho! */
     border-radius: 20px;
     padding: 30px;
     position: relative;
-    text-align: center;
     transform: translateY(0);
-    transition: transform 0.3s ease; /* Animación de deslizamiento */
+    transition: transform 0.3s ease;
+    max-height: 90vh; 
+    overflow-y: auto;
 }
+
+/* Ocultar barra de scroll principal del modal */
+.modal-content::-webkit-scrollbar { width: 6px; }
+.modal-content::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 10px; }
 
 .modal.hidden .modal-content {
     transform: translateY(-50px);
@@ -143,21 +148,426 @@ body {
     color: #333;
     cursor: pointer;
     line-height: 1;
+    z-index: 10;
 }
 
-.close-btn:hover {
-    color: #e3350d;
+.close-btn:hover { color: #e3350d; }
+
+/* El nuevo Layout de 2 columnas */
+.modal-body-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Izquierda más estrecha que derecha */
+    gap: 30px;
+    margin-top: 10px;
 }
 
-/* Estilos internos de la ficha */
-#modal-body img {
-    height: 150px;
+/* Columna Izquierda (Imagen, Nombre, Tipos, Lore) */
+.modal-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#modal-img {
+    height: 180px;
+    width: 180px;
     object-fit: contain;
+    margin: 0 auto 15px auto;
     filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
 }
 
-#modal-body h2 {
+.modal-left h2 {
     text-transform: capitalize;
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin: 10px 0;
+}
+
+.lore-text {
+    font-size: 0.95em;
+    color: #555;
+    font-style: italic;
+    line-height: 1.6;
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border-left: 4px solid #ccc;
+    width: 100%;
+}
+
+/* Columna Derecha (Info, Stats, Evoluciones, Moves) */
+.modal-right {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.modal-section {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.modal-section h4 {
+    margin-bottom: 12px;
+    color: #333;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 5px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 0.9em;
+    color: #444;
+}
+
+.habilidades-contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.ability-badge {
+    background-color: #333;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Evoluciones */
+.evolutions-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.evo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.85em;
+    text-transform: capitalize;
+    font-weight: 600;
+}
+
+.evo-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 5px;
+}
+
+/* Ataques (Moves) con Scroll interno */
+.moves-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.moves-container::-webkit-scrollbar { width: 4px; }
+.moves-container::-webkit-scrollbar-thumb { background-color: #bbb; border-radius: 10px; }
+
+.move-badge {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    text-transform: capitalize;
+}
+
+/* Botón Shiny */
+.btn-toggle {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-toggle:hover { transform: scale(1.05); }
+.btn-toggle.shiny-active { background-color: #f1c40f; color: #333; }
+
+/* Barras de estadísticas */
+.stats-container {
+    width: 100%;
+    padding-top: 5px;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85em;
+}
+
+.stat-name {
+    width: 65px;
+    text-align: right;
+    margin-right: 10px;
+    color: #555;
+    font-weight: 600;
+}
+
+.stat-value {
+    width: 30px;
+    text-align: left;
+    margin-right: 10px;
+    font-weight: 800;
+    color: #333;
+}
+
+.stat-bar-bg {
+    flex-grow: 1;
+    background-color: #e0e0e0;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 1s cubic-bezier(0.1, 0.7, 0.1, 1);
+}
+
+/* Diseño Responsive (Móviles) */
+@media (max-width: 768px) {
+    .modal-body-layout { grid-template-columns: 1fr; }
+}
+
+/* --- ESTILOS DE LA BARRA DE BÚSQUEDA Y FILTROS --- */
+/* --- ESTILOS DE LA CABECERA (ESTILO POKÉDEX) --- */
+.pokedex-header {
+    /* Degradado rojo estilo carcasa de plástico 3D */
+    background: linear-gradient(135deg, #ff4b4b 0%, #d80000 100%);
+    color: white;
+    padding: 2rem 2rem 1.5rem 2rem;
+    /* Borde grueso inferior y sombra interior para darle volumen */
+    border-bottom: 12px solid #222;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.2), 0 5px 15px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Importante para colocar las luces absolutas */
+}
+/* Branding superior izquierdo (Luces + PokeWeb) */
+.top-left-branding {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    display: flex;
+    align-items: center; /* Alinea la luz grande con el bloque de la derecha */
+    gap: 12px; /* Separación entre la luz azul y el texto/luces pequeñas */
+}
+
+.branding-text-lights {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Separación entre las luces pequeñitas y la palabra POKEWEB */
+}
+
+.lights-small-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* Lente azul grande */
+.light-main {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #85d8ff, #0077b6);
+    border: 3px solid #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5), 0 0 15px #00aaff;
+    position: relative;
+}
+
+/* Brillo blanco interior de la lente azul */
+.light-reflection {
+    width: 15px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+/* Lentes pequeñas (rojo, amarillo, verde) */
+.light-small {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1px solid #333;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.4);
+}
+.light-small.red { background-color: #ff3b30; }
+.light-small.yellow { background-color: #ffcc00; }
+.light-small.green { background-color: #4cd964; }
+
+/* El logo de PokeWeb en pequeño */
+.app-name-small {
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: #ffcb05; 
+    /* Borde azul más fino para texto pequeño */
+    text-shadow: 
+        -1.5px -1.5px 0 #2a52be,  
+         1.5px -1.5px 0 #2a52be,
+        -1.5px  1.5px 0 #2a52be,
+         1.5px  1.5px 0 #2a52be,
+         0 3px 5px rgba(0,0,0,0.5); 
+}
+/* Contenedor central */
+.header-principal {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+
+
+/* Título con estilo Logo Pokémon (Amarillo + borde Azul) */
+/* Título central del módulo actual (Blanco limpio) */
+.header-principal h1 {
+    font-weight: 800;
+    font-size: 2.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    color: #ffffff; /* Texto en blanco puro */
+    /* Sombra suave y oscura para darle contraste y volumen sin saturar */
+    text-shadow: 0 4px 6px rgba(0,0,0,0.4);
+}
+.busqueda-contenedor {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.busqueda-contenedor input {
+    flex-grow: 1;
+    max-width: 400px;
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.2);
+    font-family: 'Poppins', sans-serif;
+}
+
+.pokedex-header .btn-toggle {
+    margin: 0;
+    padding: 12px 20px;
+    height: auto;
+    font-size: 1rem;
+}
+
+/* Animación del panel oculto */
+.panel-filtros {
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, margin-top 0.4s ease-out;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.panel-filtros.abierto {
+    max-height: 150px; 
+    margin-top: 20px;
+}
+
+.grupo-selectores {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.25); /* Un poco más oscuro */
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.3); /* Sombra interior */
+}
+
+.grupo-selectores select {
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.grupo-selectores select:disabled {
+    background-color: #bbb;
+    color: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- NUEVOS ESTILOS: BUSCADOR, MOVES Y FASES EVOLUTIVAS --- */
+.move-search-input {
+    width: 100%;
+    padding: 8px 15px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85em;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.move-badge {
+    /* Quitamos el color de fondo gris, ahora se lo daremos con JS */
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: capitalize;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Columna para agrupar evoluciones de la misma fase (Ej: Gardevoir y Gallade) */
+.evo-tier {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }

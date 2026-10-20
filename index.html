@@ -9,8 +9,65 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="pokedex-header">
-        <h1>Global Pokedex</h1>
+<header class="pokedex-header">
+        <!-- Branding superior izquierdo: Luces y Logo de la App -->
+        <div class="top-left-branding">
+            <div class="light-main">
+                <div class="light-reflection"></div>
+            </div>
+            
+            <div class="branding-text-lights">
+                <div class="lights-small-group">
+                    <div class="light-small red"></div>
+                    <div class="light-small yellow"></div>
+                    <div class="light-small green"></div>
+                </div>
+                <div class="app-name-small">POKEWEB</div>
+            </div>
+        </div>
+
+        <!-- Título central del módulo actual -->
+        <div class="header-principal">
+            <h1>Global Pokédex</h1>
+            
+            <div class="busqueda-contenedor">
+                <input type="text" id="buscador" placeholder="Buscar por nombre (ej. Pikachu)...">
+                <button id="btn-toggle-filtros" class="btn-toggle">⚙️ Filtros</button>
+            </div>
+        </div>
+        
+        <!-- Panel de filtros oculto -->
+        <div id="panel-filtros" class="panel-filtros">
+            <div class="grupo-selectores">
+                <select id="filtro-tipo-1">
+                    <option value="todos">Cualquier Tipo</option>
+                    <option value="normal">Normal</option><option value="fire">Fuego</option>
+                    <option value="water">Agua</option><option value="grass">Planta</option>
+                    <option value="electric">Eléctrico</option><option value="ice">Hielo</option>
+                    <option value="fighting">Lucha</option><option value="poison">Veneno</option>
+                    <option value="ground">Tierra</option><option value="flying">Volador</option>
+                    <option value="psychic">Psíquico</option><option value="bug">Bicho</option>
+                    <option value="rock">Roca</option><option value="ghost">Fantasma</option>
+                    <option value="dragon">Dragón</option><option value="dark">Siniestro</option>
+                    <option value="steel">Acero</option><option value="fairy">Hada</option>
+                </select>
+
+                <select id="filtro-tipo-2" disabled>
+                    <option value="ninguno">Segundo Tipo (Opcional)</option>
+                    <option value="normal">Normal</option><option value="fire">Fuego</option>
+                    <option value="water">Agua</option><option value="grass">Planta</option>
+                    <option value="electric">Eléctrico</option><option value="ice">Hielo</option>
+                    <option value="fighting">Lucha</option><option value="poison">Veneno</option>
+                    <option value="ground">Tierra</option><option value="flying">Volador</option>
+                    <option value="psychic">Psíquico</option><option value="bug">Bicho</option>
+                    <option value="rock">Roca</option><option value="ghost">Fantasma</option>
+                    <option value="dragon">Dragón</option><option value="dark">Siniestro</option>
+                    <option value="steel">Acero</option><option value="fairy">Hada</option>
+                </select>
+                
+                <button id="btn-filtrar" class="btn-toggle" style="margin: 0;">Filtrar</button>
+            </div>
+        </div>
     </header>
 
     <main>
