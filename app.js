@@ -164,16 +164,22 @@ function reiniciarGrid() {
 
 // --- 5. CREACIÓN DE INTERFAZ (Tu código intacto) ---
 
+// --- 5. CREACIÓN DE INTERFAZ ---
 function crearTarjetaPokemon(pokemon) {
-    const tarjeta = document.createElement('div');
+    const tarjeta = document.createElement('a'); // Ahora es un enlace
     tarjeta.classList.add('pokemon-card');
+    tarjeta.href = `?pokemon=${pokemon.name}`; // Parámetro URL para nueva pestaña
+    tarjeta.style.textDecoration = 'none'; 
+    tarjeta.style.color = 'inherit';
 
     const imgPorDefecto = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
 
-    const sprite = pokemon.sprites?.other?.showdown?.front_default || 
-                   pokemon.sprites?.other?.['official-artwork']?.front_default ||
+    // Para usar los modelos 3D en HD (Pokémon HOME):
+    // Prioridad 1: Dibujo Oficial HD. Prioridad 2: GIF animado (Showdown).
+    const sprite = pokemon.sprites?.versions['generation-v']['black-white']?.animated?.front_default || 
+                   pokemon.sprites?.versions['generation-v']['black-white']?.front_default || 
                    pokemon.sprites?.front_default || 
-                   imgPorDefecto;    
+                   imgPorDefecto;
                    
     const numeroStr = pokemon.id.toString().padStart(3, '0');
     const tipos = pokemon.types.map(tipoInfo => tipoInfo.type.name);
@@ -190,10 +196,17 @@ function crearTarjetaPokemon(pokemon) {
         <div class="tipos">${tiposHTML}</div>
     `;
 
-    tarjeta.addEventListener('click', () => abrirModal(pokemon, sprite, colorPrincipal));
+    tarjeta.addEventListener('click', (e) => {
+        // Permitir abrir en nueva pestaña con Ctrl+Click o rueda del ratón
+        if (e.ctrlKey || e.metaKey || e.button === 1) return;
+        
+        e.preventDefault();
+        abrirModal(pokemon, sprite, colorPrincipal);
+        window.history.pushState({}, '', `?pokemon=${pokemon.name}`); // Actualiza URL visualmente
+    });
+    
     grid.appendChild(tarjeta);
 }
-
 // --- 6. MODAL Y EVENTOS EXTRA (Tu código intacto) ---
 
 // --- 6. MODAL Y EVENTOS EXTRA ---
@@ -208,15 +221,16 @@ const moveCache = {};
 
 // Función para montar y mostrar el Modal (Inglés + Evoluciones Ramificadas + Moves Async)
 async function abrirModal(pokemon, spriteNormal, colorFondo) {
-    const imgPorDefecto = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
-    const spriteShiny = pokemon.sprites?.other?.showdown?.front_shiny || 
-                        pokemon.sprites?.other?.['official-artwork']?.front_shiny ||
+const imgPorDefecto = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
+    
+    const spriteShiny = pokemon.sprites?.versions['generation-v']['black-white']?.animated?.front_shiny || 
+                        pokemon.sprites?.versions['generation-v']['black-white']?.front_shiny || 
                         pokemon.sprites?.front_shiny || 
                         imgPorDefecto;
 
-    // Extraer Habilidades (Inglés)
+// Extraer Habilidades (Inglés + Tooltips)
     const habilidadesHtml = pokemon.abilities.map(a => 
-        `<span class="ability-badge">${a.ability.name.replace('-', ' ')}</span>`
+        `<span class="ability-badge" id="ability-${a.ability.name}" data-tooltip="Loading effect...">${a.ability.name.replace('-', ' ')}</span>`
     ).join('');
 
     // Extraer Estadísticas Base (Inglés)
@@ -374,6 +388,19 @@ async function abrirModal(pokemon, spriteNormal, colorFondo) {
                 <h4>Evolution Chain</h4>
                 <div class="evolutions-container">${evoHtml}</div>
             `;
+
+            // Cargar descripciones de Habilidades (Tooltips)
+        pokemon.abilities.forEach(async (a) => {
+            try {
+                const resAb = await fetch(a.ability.url);
+                const dataAb = await resAb.json();
+                const entry = dataAb.effect_entries.find(e => e.language.name === 'en');
+                const effectText = entry ? entry.short_effect : 'No description available.';
+                document.getElementById(`ability-${a.ability.name}`).setAttribute('data-tooltip', effectText);
+            } catch (err) {
+                console.error("Error loading ability", err);
+            }
+        });
         }
 
         // 2. Cargar Ataques (Moves) con Tipos y Buscador
@@ -419,11 +446,13 @@ async function abrirModal(pokemon, spriteNormal, colorFondo) {
 
 closeModal.addEventListener('click', () => {
     modal.classList.add('hidden');
+    window.history.pushState({}, '', window.location.pathname);
 });
 
 window.addEventListener('click', (evento) => {
     if (evento.target === modal) {
         modal.classList.add('hidden');
+        window.history.pushState({}, '', window.location.pathname);
     }
 });
 
@@ -437,5 +466,49 @@ const observer = new IntersectionObserver((entradas) => {
 
 observer.observe(cargando);
 
+// --- LÓGICA DEL MENÚ LATERAL (SIDEBAR) ---
+const btnMenuPrincipal = document.getElementById('btn-menu-principal');
+const menuPrincipal = document.getElementById('menu-principal');
+const overlaySidebar = document.getElementById('sidebar-overlay');
+const btnCloseSidebar = document.getElementById('close-sidebar');
+
+// Función que abre y cierra el menú y el overlay
+function toggleSidebar() {
+    menuPrincipal.classList.toggle('activo');
+    overlaySidebar.classList.toggle('activo');
+}
+
+// Eventos
+btnMenuPrincipal.addEventListener('click', toggleSidebar);
+btnCloseSidebar.addEventListener('click', toggleSidebar);
+
+// Si el usuario hace clic en lo oscuro, también se cierra
+overlaySidebar.addEventListener('click', toggleSidebar);
+
 // --- 7. ARRANQUE DE LA APLICACIÓN ---
-inicializarPokedex();
+async function iniciarApp() {
+    await inicializarPokedex();
+
+    // Comprobar si hay un Pokémon en la URL para abrir su modal automáticamente
+    const urlParams = new URLSearchParams(window.location.search);
+    const pokeParam = urlParams.get('pokemon');
+    
+    if (pokeParam) {
+        try {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeParam.toLowerCase()}`);
+            const pokemon = await res.json();
+            
+            const tipos = pokemon.types.map(t => t.type.name);
+            const colorPrincipal = coloresTipos[tipos[0]];
+            const sprite = pokemon.sprites?.other?.showdown?.front_default || 
+                           pokemon.sprites?.other?.['official-artwork']?.front_default ||
+                           pokemon.sprites?.front_default;
+                           
+            abrirModal(pokemon, sprite, colorPrincipal);
+        } catch (error) {
+            console.error("Pokémon de la URL no encontrado:", error);
+        }
+    }
+}
+
+iniciarApp();

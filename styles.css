@@ -571,3 +571,231 @@ body {
     gap: 10px;
     align-items: center;
 }
+
+/* --- MODO OSCURO PARA EL MODAL --- */
+.modal-content {
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.modal-section {
+    background-color: #333;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.modal-section h4 {
+    color: #ccc;
+    border-bottom: 2px solid #444;
+}
+
+.lore-text {
+    background-color: #333;
+    color: #eee;
+    border-left-color: #555; /* Fallback si no carga el color del tipo */
+}
+
+.info-grid, .stat-name {
+    color: #bbb;
+}
+
+.stat-value, .close-btn {
+    color: #fff;
+}
+
+.stat-bar-bg {
+    background-color: #444;
+}
+
+.move-search-input {
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+/* --- TOOLTIP PARA HABILIDADES --- */
+.ability-badge {
+    position: relative;
+    cursor: help;
+}
+
+.ability-badge::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: #111;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: normal;
+    width: max-content;
+    max-width: 200px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    font-weight: normal;
+    pointer-events: none;
+}
+
+.ability-badge::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #111 transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.ability-badge:hover::after,
+.ability-badge:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Forzar nitidez en imágenes pequeñas para que el pixel art no se vea borroso
+.pokemon-card img, #modal-img, .evo-item img {
+    image-rendering: pixelated;
+    Para dar soporte a navegadores antiguos
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+} */
+
+/* 2D */
+/* Forzar nitidez en los GIFs 2D animados */
+/* Forzar que los sprites de la DS mantengan los píxeles perfectos */
+.pokemon-card img, #modal-img, .evo-item img {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* --- LUZ AZUL INTERACTIVA --- */
+.light-main {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.light-main:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0,0,0,0.6), 0 0 25px #00aaff;
+}
+
+/* --- MENÚ LATERAL (SIDEBAR) --- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px; 
+    max-width: 80vw;
+    height: 100vh;
+    /* Degradado rojo idéntico al de la cabecera principal */
+    background: linear-gradient(135deg, #ff4b4b 0%, #d80000 100%);
+    /* Borde grueso oscuro idéntico al inferior de la cabecera para mantener la forma 3D */
+    border-right: 8px solid #222; 
+    box-shadow: 5px 0 25px rgba(0,0,0,0.8);
+    
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
+    z-index: 3000; 
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.activo {
+    transform: translateX(0); 
+}
+
+/* Cabecera interna del menú (ahora transparente para unirse al rojo general) */
+.sidebar-header {
+    padding: 25px 20px 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 4px solid rgba(0,0,0,0.2); /* Sutil línea separadora */
+}
+
+.sidebar-title-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título POKEWEB limpio estilo Global Pokédex */
+.sidebar-header h2 {
+    color: #ffffff;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin: 0;
+    text-shadow: 0 4px 6px rgba(0,0,0,0.4);
+    line-height: 1;
+}
+
+/* Firma "made by jaimevxr" */
+.made-by {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+/* Botón de cerrar */
+.close-sidebar {
+    font-size: 2.5rem;
+    color: white;
+    cursor: pointer;
+    line-height: 0.8;
+    transition: transform 0.2s;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.close-sidebar:hover {
+    transform: scale(1.2);
+    color: #ffcb05; /* Amarillo al pasar el ratón */
+}
+
+/* Lista de enlaces */
+.sidebar ul {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15); /* Divisor oscuro semitransparente */
+}
+
+.sidebar a {
+    display: block;
+    padding: 18px 25px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.05rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-left: 0px solid transparent;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Hover: Fondo más oscuro y barra amarilla lateral */
+.sidebar a:hover {
+    background-color: rgba(0, 0, 0, 0.15); 
+    padding-left: 35px; 
+    border-left: 6px solid #ffcb05; /* Amarillo Pokémon que resalta brutal en rojo */
+    color: #fff; 
+}

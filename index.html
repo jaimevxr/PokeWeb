@@ -4,15 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokeWeb</title>
-    <!-- Importamos una fuente moderna de Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=2.0">
+    <link rel="stylesheet" href="styles.css?v=2.1">
 </head>
 <body>
-<header class="pokedex-header">
-        <!-- Branding superior izquierdo: Luces y Logo de la App -->
+
+    <!-- Overlay oscuro para el fondo cuando se abre el menú -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- Menú Lateral (Sidebar) -->
+<!-- Menú Lateral (Sidebar) -->
+    <nav id="menu-principal" class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title-container">
+                <h2>POKEWEB</h2>
+                <span class="made-by">made by jaimevxr</span>
+            </div>
+            <span class="close-sidebar" id="close-sidebar">&times;</span>
+        </div>
+        <ul>
+            <li><a href="#">🏠 Global Pokédex</a></li>
+            <li><a href="#">⚔️ Team Builder <span class="badge">Pronto</span></a></li>
+            <li><a href="#">⚙️ Settings</a></li>
+            <li><a href="#">🌐 Language (EN)</a></li>
+        </ul>
+    </nav>
+
+    <header class="pokedex-header">
+        <!-- Branding superior izquierdo: Lente Azul (Botón) y Logo -->
         <div class="top-left-branding">
-            <div class="light-main">
+            <div class="light-main" id="btn-menu-principal" title="Menú Principal">
                 <div class="light-reflection"></div>
             </div>
             
@@ -78,17 +99,14 @@
         </div>
     </main>
 
-
-    <!-- Contenedor del Modal (Oculto por defecto) -->
+    <!-- Contenedor del Modal -->
     <div id="pokemon-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="close-modal">&times;</span>
-            <div id="modal-body">
-                <!-- JavaScript inyectará la imagen y los datos aquí -->
-            </div>
+            <div id="modal-body"></div>
         </div>
     </div>
     
-    <script src="app.js?v=2.0"></script>
+    <script src="app.js?v=2.1"></script>
 </body>
 </html>
