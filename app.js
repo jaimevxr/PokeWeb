@@ -500,9 +500,10 @@ async function iniciarApp() {
             
             const tipos = pokemon.types.map(t => t.type.name);
             const colorPrincipal = coloresTipos[tipos[0]];
-            const sprite = pokemon.sprites?.other?.showdown?.front_default || 
-                           pokemon.sprites?.other?.['official-artwork']?.front_default ||
-                           pokemon.sprites?.front_default;
+            const sprite = pokemon.sprites?.versions['generation-v']['black-white']?.animated?.front_default || 
+                        pokemon.sprites?.versions['generation-v']['black-white']?.front_default || 
+                        pokemon.sprites?.front_default || 
+                        imgPorDefecto;
                            
             abrirModal(pokemon, sprite, colorPrincipal);
         } catch (error) {
