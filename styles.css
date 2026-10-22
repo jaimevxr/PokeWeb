@@ -799,3 +799,76 @@ body {
     border-left: 6px solid #ffcb05; /* Amarillo Pokémon que resalta brutal en rojo */
     color: #fff; 
 }
+
+/* --- TOOLTIPS TÁCTILES (MÓVIL) --- */
+.ability-badge.activo::after,
+.ability-badge.activo::before,
+.ability-badge:focus::after,
+.ability-badge:focus::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* --- AJUSTES RESPONSIVOS (MÓVIL) --- */
+@media (max-width: 600px) {
+    .pokedex-header {
+        padding: 1.5rem 1rem 1rem 1rem;
+    }
+    
+    /* Hacemos hueco a las luces superiores para que no aplasten el título */
+    .header-principal {
+        margin-top: 35px;
+    }
+    
+    /* Reducimos el tamaño de la fuente para que quepa en una línea */
+    .header-principal h1 {
+        font-size: 1.8rem;
+    }
+    
+    .top-left-branding {
+        top: 10px;
+        left: 10px;
+    }
+    
+    /* Lente un poco más pequeña */
+    .light-main {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* Buscador a columna para que el botón no se apriete */
+    .busqueda-contenedor {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .busqueda-contenedor input {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .pokedex-header .btn-toggle {
+        width: 100%;
+    }
+}
+
+/* --- CAPA OSCURA DE FONDO (OVERLAY) --- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6); /* Oscurece el resto de la web */
+    z-index: 2999; /* Justo debajo del sidebar que tiene z-index: 3000 */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Cuando se abre el menú, mostramos la capa oscura */
+.sidebar-overlay.activo {
+    opacity: 1;
+    visibility: visible;
+}

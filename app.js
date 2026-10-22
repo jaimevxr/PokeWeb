@@ -228,9 +228,9 @@ const imgPorDefecto = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/
                         pokemon.sprites?.front_shiny || 
                         imgPorDefecto;
 
-// Extraer Habilidades (Inglés + Tooltips)
+// Extraer Habilidades (Inglés + Tooltips táctiles aislados)
     const habilidadesHtml = pokemon.abilities.map(a => 
-        `<span class="ability-badge" id="ability-${a.ability.name}" data-tooltip="Loading effect...">${a.ability.name.replace('-', ' ')}</span>`
+        `<span class="ability-badge" tabindex="0" id="ability-${a.ability.name}" data-tooltip="Loading effect..." onclick="event.stopPropagation(); this.classList.toggle('activo')">${a.ability.name.replace('-', ' ')}</span>`
     ).join('');
 
     // Extraer Estadísticas Base (Inglés)
@@ -472,18 +472,23 @@ const menuPrincipal = document.getElementById('menu-principal');
 const overlaySidebar = document.getElementById('sidebar-overlay');
 const btnCloseSidebar = document.getElementById('close-sidebar');
 
-// Función que abre y cierra el menú y el overlay
-function toggleSidebar() {
-    menuPrincipal.classList.toggle('activo');
-    overlaySidebar.classList.toggle('activo');
+// Abrir menú y capa oscura
+btnMenuPrincipal.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menuPrincipal.classList.add('activo');
+    overlaySidebar.classList.add('activo');
+});
+
+// Función para cerrar todo
+function cerrarSidebar() {
+    menuPrincipal.classList.remove('activo');
+    overlaySidebar.classList.remove('activo');
 }
 
-// Eventos
-btnMenuPrincipal.addEventListener('click', toggleSidebar);
-btnCloseSidebar.addEventListener('click', toggleSidebar);
+// Eventos de cierre (Botón X y Clic en cualquier parte del fondo oscuro)
+btnCloseSidebar.addEventListener('click', cerrarSidebar);
+overlaySidebar.addEventListener('click', cerrarSidebar);
 
-// Si el usuario hace clic en lo oscuro, también se cierra
-overlaySidebar.addEventListener('click', toggleSidebar);
 
 // --- 7. ARRANQUE DE LA APLICACIÓN ---
 async function iniciarApp() {
